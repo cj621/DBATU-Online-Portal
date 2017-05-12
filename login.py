@@ -2,7 +2,17 @@ from flask import Flask, request, url_for, render_template, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
-from db import *
+from models.student_table import *
+# from models.departmentnews_table import *
+
+
+from __init__ import app
+
+
+# http://stackoverflow.com/questions/26859155/unable-to-import-db-object-more-than-once-in-flask-and-sqlalchemy
+from db_init import db
+db.init_app(app)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -46,11 +56,14 @@ def logout():
 	flash('Successfully Logged Out!')
 	return redirect(url_for('login'))
 
+# from department import *
+
 @app.route('/home')
 @login_required
 def home():
-	return render_template("student_home.html", student_name = current_user.name)
+	return redirect(url_for('department.'+current_user.dept))
 
 
+# main function
 if __name__ == '__main__':
 	app.run(debug=True)
