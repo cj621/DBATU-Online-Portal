@@ -25,9 +25,9 @@
 
 	<div class="container">	
 		<div class="row">
-			<h1 class="text-center">{{ student_name }} </h1>
+			<h1 class="text-center">{{ current_user.name }} </h1>
 			<p class="text-right">
-				<a href="/{{dept}}">Back to Department!</a>&emsp;
+				<a href="/{{current_user.dept}}">Back to Department!</a>&emsp;
 				<a href="/logout"><button class="btn btn-primary">Logout!</button></a>
 			</p>
 			

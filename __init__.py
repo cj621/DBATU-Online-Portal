@@ -7,6 +7,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'secret key'
 
 
+#Blueprints
 from department import dept_module
-
 app.register_blueprint(dept_module)
+
+#DB object
+from db_init import db
+db.init_app(app)

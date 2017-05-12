@@ -3,15 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 from models.student_table import *
-# from models.departmentnews_table import *
-
+from models.supportstaff_table import *
 
 from __init__ import app
-
-
-# http://stackoverflow.com/questions/26859155/unable-to-import-db-object-more-than-once-in-flask-and-sqlalchemy
-from db_init import db
-db.init_app(app)
 
 
 login_manager = LoginManager()
@@ -22,7 +16,12 @@ login_manager.login_message = 'You need to log in with correct credentials befor
 ## mapping the python flask object with the object in the actual model
 @login_manager.user_loader
 def load_user(user_id):
-	return Students.query.get(int(user_id))
+	staff_id = SupportStaff.query.get(user_id)
+	student_id = Students.query.get(int(user_id))
+	if student_id:
+		return student_id
+	else:
+		return staff_id
 
 
 @app.route('/')
@@ -36,17 +35,27 @@ def loggedin():
 	password = request.form['password']
 
 	student = Students.query.filter_by(id = id).first()
+	staff = SupportStaff.query.filter_by(username = id).first()
 
-	if not student:
+
+	if not student and not staff:
 		flash('User Not Found! Please contact the Exam Dept.')
 		return redirect(url_for('login'))
-	elif student.password != password:
-		flash('Invalid Credentials!')
-		return redirect(url_for('login'))
-		
+	elif student:
+		if student.password != password:
+			flash('Invalid Credentials!')
+			return redirect(url_for('login'))
+		else:
+			login_user(student)
+			return redirect(url_for('home'))
+	elif staff:
+		if staff.password != password:
+			flash('Invalid Credentials!')
+			return redirect(url_for('login'))
+		else:
+			login_user(staff)
+			return redirect(url_for('home'))
 
-	login_user(student)
-	return redirect(url_for('home'))
 
 
 @app.route('/logout')
