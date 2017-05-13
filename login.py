@@ -7,7 +7,6 @@ from models.supportstaff_table import *
 
 from __init__ import app
 
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/' #this works with @login_required decorator
@@ -52,6 +51,9 @@ def loggedin():
 		if staff.password != password:
 			flash('Invalid Credentials!')
 			return redirect(url_for('login'))
+		elif (staff.dept == 'Students_Section' or staff.dept == 'NCC' or staff.dept == 'NSS' or staff.dept == 'Sports' or staff.dept == 'Exam_Department'):
+			login_user(staff)
+			return redirect(url_for('university.university_news', section = staff.dept))
 		else:
 			login_user(staff)
 			return redirect(url_for('home'))
@@ -70,7 +72,10 @@ def logout():
 @app.route('/home')
 @login_required
 def home():
-	return redirect(url_for('department.department_homepage', dept_name = current_user.dept))
+	if current_user.dept == 'Students_Section' or current_user.dept == 'Exam_Department' or current_user.dept == 'NCC' or current_user.dept == 'NSS' or current_user.dept == 'Sports':
+		return redirect(url_for('university.university_news', section = current_user.dept))
+	else:
+		return redirect(url_for('department.department_homepage', dept_name = current_user.dept))
 
 
 # main function

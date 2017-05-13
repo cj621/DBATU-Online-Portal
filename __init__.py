@@ -11,6 +11,9 @@ app.config['SECRET_KEY'] = 'secret key'
 from department import dept_module
 app.register_blueprint(dept_module)
 
+from university import university_module
+app.register_blueprint(university_module)
+
 #DB object
 from db_init import db
 db.init_app(app)

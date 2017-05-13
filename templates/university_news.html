@@ -21,22 +21,149 @@
 	  </div>
 	
 	</nav>
+
+	<div class="container">
+	    <nav class="navbar">
+	    	<div class="container">
+	    		<div class="navbar-header">
+	    			<button type="button" class="navbar-toggle collapsed text-center" data-toggle="collapse" data-target="#nav-content" aria-expanded="false">
+<!--                    <span class="sr-only">Toggle navigation</span>-->
+                    	<span class="glyphicon glyphicon-align-justify"> Menu</span>
+                    
+                  	</button>
+	    		</div>
+
+	    		<div class="collapse navbar-collapse" id="nav-content">
+					<ul class="nav navbar-nav">
+			          <li><a href="{{ url_for('university.university_news', section='Students_Section' ) }}">Student Section</a></li>
+			          <li><a href="{{ url_for('university.university_news', section='Exam_Department' ) }}">Exam Department</a></li>
+			          <li><a href="{{ url_for('university.university_news', section='NCC' ) }}">NCC</a></li>
+			          <li><a href="{{ url_for('university.university_news', section='NSS' ) }}">NSS</a></li>
+			          <li><a href="{{ url_for('university.university_news', section='Sports' ) }}">Sports</a></li>
+			          <li><a href="{{ url_for('university.university_news', section='Miscellaneous' ) }}">Miscellaneous</a></li>
+	      			</ul>	    			
+	    		</div>
+	    			
+	    	</div>
+	    </nav>     		
+	</div>	
 	
 
 	<div class="container">	
 		<div class="row">
 			<h1 class="text-center">{{ current_user.name }} </h1>
-			<p class="text-right">
-				<a href="/Department">Back to Department!</a>&emsp;
-				<a href="/logout"><button class="btn btn-primary">Logout!</button></a>
-			</p>
+
+			
+
+				{% if current_user.dept == 'NCC' or current_user.dept == 'NSS' or current_user.dept == 'Sports' or current_user.dept == 'Students_Section' or current_user.dept == 'Exam_Department' %}
+					<div class="row text-center">
+						<a href="#" data-toggle="modal" data-target="#myModal"><button class="btn btn-primary">Create New Post</button></a>
+				    	<a href="/logout"><button class="btn btn-primary">Logout!</button></a>
+					</div>
+					
+				{% else %}
+					{% if news[0].dept == 'Miscellaneous' %}
+						<div class="row text-center">
+							<a href="#" data-toggle="modal" data-target="#myModal"><button class="btn btn-primary">Create New Post</button></a>&emsp;
+					    	<a href="/{{current_user.dept}}">Back to Department!</a>&emsp;
+							<a href="/logout"><button class="btn btn-primary">Logout!</button></a>
+						</div>
+						
+					{% else %}
+						<div class="row text-center">
+							<a href="/{{current_user.dept}}">Back to Department!</a>&emsp;
+							<a href="/logout"><button class="btn btn-primary">Logout!</button></a>
+						</div>
+						
+					{% endif %}
+				{% endif %}
+
+			
 			
 		</div> 
 
 		<div class="container">
-			<h3>University news</h3>
+			<h3> 
+				News 
+				{% if news %}
+		    		{% if news[0].dept == 'Students_Section' %}
+		    			from Students Section
+		    		{% elif news[0].dept == 'Exam_Department' %}
+		    			from Exam Department
+		    		{% elif news[0].dept == 'NCC' %}
+		    			from NCC
+		    		{% elif news[0].dept == 'NSS' %}
+		    			from NSS
+		    		{% elif news[0].dept == 'Sports' %}
+		    			from Sports Section
+		    		{% elif news[0].dept == 'Miscellaneous' %}
+		    			- Miscellaneous
+		    		{% endif %}
+		    	{% endif %}
+
+			</h3>
+
+			<hr />
+				{% for item in news%}
+					<p> {{item.news}} </p>
+					<p> Posted by: {{item.posted_by}} on {{item.id}} </p>
+					<hr />
+				{% endfor %}
+			
 		</div>
 	</div>
+
+      <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Create New Post</h4>
+              </div>
+              <div class="modal-body text-left">
+                  
+                  <form action="/university_post" method="post">
+                    <div class="form-group">
+                      <label for="name">News Details</label>
+                      <textarea class="form-control" name="newsdetail" id="newsdetail" placeholder="News Details"></textarea>
+                    </div>  
+                      
+                    <div class="form-group">
+                      <label for="memory">News Category</label>
+                      <select class="form-control" name="news_category" id="news_category">
+                      	{% if current_user.dept == 'Students_Section' %}
+						  <option value="Students_Section">Students_Section</option>
+						{% elif current_user.dept == 'Exam_Department' %}
+						  <option value="Exam_Department">Exam_Department</option>
+						{% elif current_user.dept == 'NCC' %}
+						  <option value="NCC">NCC</option>
+						{% elif current_user.dept == 'NSS' %}
+						  <option value="NSS">NSS</option>
+						{% elif current_user.dept == 'Sports' %}
+						  <option value="Sports">Sports</option>
+						{% endif %}
+
+						  <option value="Miscellaneous">Miscellaneous</option>
+
+					  </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    
+                  </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
 
 </body>
 
