@@ -7,7 +7,7 @@
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-	<title>DBATU Online Portal | {{current_user.dept}} HomePage</title>
+	<title>DBATU Online Portal | {{current_user.dept}} Department</title>
 </head>
 
 <body>
@@ -22,19 +22,28 @@
 	
 	</nav>
 
-	<div class="container text-center">
+	<div class="container">
 	    <nav class="navbar">
 	    	<div class="container">
 	    		<div class="navbar-header">
-	    			<ul class="nav navbar-nav">
-			          <li><a href="/Computer">Department News</a></li>
-			          <li><a href="/Computer/first_year">1st Year</a></li>
-			          <li><a href="/Computer/second_year">2nd Year</a></li>
-			          <li><a href="/Computer/third_year">3rd Year</a></li>
-			          <li><a href="/Computer/final_year">4th Year</a></li>
-			          <li><a href="/university_news">University News</a></li>
-	      			</ul>
+	    			<button type="button" class="navbar-toggle collapsed text-center" data-toggle="collapse" data-target="#nav-content" aria-expanded="false">
+<!--                    <span class="sr-only">Toggle navigation</span>-->
+                    	<span class="glyphicon glyphicon-align-justify"> Menu</span>
+                    
+                  	</button>
 	    		</div>
+
+	    		<div class="collapse navbar-collapse" id="nav-content">
+					<ul class="nav navbar-nav">
+			          <li><a href="/{{current_user.dept}}">Department News</a></li>
+			          <li><a href="/{{current_user.dept}}/first_year">1st Year</a></li>
+			          <li><a href="/{{current_user.dept}}/second_year">2nd Year</a></li>
+			          <li><a href="/{{current_user.dept}}/third_year">3rd Year</a></li>
+			          <li><a href="/{{current_user.dept}}/final_year">4th Year</a></li>
+			          <li><a href="/university_news">University News</a></li>
+	      			</ul>	    			
+	    		</div>
+	    			
 	    	</div>
 	    </nav>     		
 	</div>
@@ -44,18 +53,33 @@
 	<div class="container">	
 		<h1 class="text-center">{{ current_user.name }} <a href="/logout"><button class="btn btn-primary">Logout!</button></a></h1>
 
+		<p class="text-center"><a href="#" data-toggle="modal" data-target="#myModal"><button class="btn btn-primary">Create New Post</button></a></p>
 
 		<div class="container">
-		<h3>
-			News
-			<a class="pull-right" href="#" data-toggle="modal" data-target="#myModal"><button class="btn btn-primary">Create New Post</button></a>
-		</h3>
-		<hr />
-			{% for item in news%}
-				<p> {{item.news}} </p>
-				<p> Posted by: {{item.posted_by}} on {{item.id}} </p>
-				<hr />
-			{% endfor %}
+			<h3>
+				News 
+				
+				{% if news %}
+		    		{% if news[0].news_for == 'first_year' %}
+		    			for First year Students
+		    		{% elif news[0].news_for == 'second_year' %}
+		    			for Second year Students
+		    		{% elif news[0].news_for == 'third_year' %}
+		    			for Third year Students
+		    		{% elif news[0].news_for == 'final_year' %}
+		    			for Final year Students
+		    		{% else %}
+		    			for Department Students
+		    		{% endif %}
+		    	{% endif %}
+			</h3>
+
+			<hr />
+				{% for item in news%}
+					<p> {{item.news}} </p>
+					<p> Posted by: {{item.posted_by}} on {{item.id}} </p>
+					<hr />
+				{% endfor %}
 		</div>
 	</div>
 

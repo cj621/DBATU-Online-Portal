@@ -65,12 +65,12 @@ def logout():
 	flash('Successfully Logged Out!')
 	return redirect(url_for('login'))
 
-# from department import *
+
 
 @app.route('/home')
 @login_required
 def home():
-	return redirect(url_for('department.'+current_user.dept))
+	return redirect(url_for('department.department_homepage', dept_name = current_user.dept))
 
 
 # main function
