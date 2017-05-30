@@ -10,7 +10,8 @@ from __init__ import app
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/' #this works with @login_required decorator
-login_manager.login_message = 'You need to log in with correct credentials before going to Home Page!'
+login_manager.login_message = 'You need to log in with correct credentials!'
+
 
 ## mapping the python flask object with the object in the actual model
 @login_manager.user_loader
@@ -22,10 +23,9 @@ def load_user(user_id):
 	else:
 		return staff_id
 
-
 @app.route('/')
 def login():
-	return render_template("login.html")
+    return render_template("login.html")
 
 
 @app.route('/loggedin', methods = ['POST'])
@@ -78,6 +78,6 @@ def home():
 		return redirect(url_for('department.department_homepage', dept_name = current_user.dept))
 
 
-# main function
+
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=True, host='0.0.0.0')

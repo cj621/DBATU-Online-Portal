@@ -106,6 +106,13 @@
 			<hr />
 				{% for item in news%}
 					<p> {{item.news}} </p>
+					{% if item.file_name %}
+						<p>{{item.file_name}}</p>
+						<a href="/uploads/{{item.file_name}}" target="blank">View</a> &emsp;|&emsp; 
+						<a href="/uploads/{{item.file_name}}" download>Download</a>
+						<br/><br/>
+					{% endif %}
+					
 					<p> Posted by: {{item.posted_by}} on {{item.id}} </p>
 					<hr />
 				{% endfor %}
@@ -123,14 +130,14 @@
               </div>
               <div class="modal-body text-left">
                   
-                  <form action="/university_post" method="post">
+                  <form action="/university_post" method="post" enctype="multipart/form-data">
                     <div class="form-group">
-                      <label for="name">News Details</label>
+                      <label for="newsdetail">News Details</label>
                       <textarea class="form-control" name="newsdetail" id="newsdetail" placeholder="News Details"></textarea>
                     </div>  
                       
                     <div class="form-group">
-                      <label for="memory">News Category</label>
+                      <label for="news_category">News Category</label>
                       <select class="form-control" name="news_category" id="news_category">
                       	{% if current_user.dept == 'Students_Section' %}
 						  <option value="Students_Section">Students_Section</option>
@@ -148,6 +155,12 @@
 
 					  </select>
                     </div>
+
+                    <div class="form-group">
+                      <label for="inputfile">File Upload (if any)</label><br/>
+                      <input type="file" name="inputfile" id="inputfile">
+                      
+                    </div> 
                     
                     <button type="submit" class="btn btn-primary">Submit</button>
                     

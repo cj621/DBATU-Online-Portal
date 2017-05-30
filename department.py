@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask import Flask, request, url_for, render_template, redirect, flash
+from flask import Flask, request, url_for, render_template, redirect, flash, send_file
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from datetime import datetime
 from sqlalchemy import desc
@@ -7,6 +7,8 @@ from sqlalchemy import desc
 dept_module = Blueprint('department', __name__)
 
 from models.departmentnews_table import *
+
+
 
 ### New Post Creation ###
 @dept_module.route('/new_post', methods=['POST'])

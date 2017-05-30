@@ -10,4 +10,6 @@ class UniversityNews(UserMixin, db.Model):
 	id = db.Column(db.DateTime(timezone=False), primary_key=True)
 	dept = db.Column(db.String(255))
 	news = db.Column(db.String(1023))
+	file_name = db.Column(db.String(300))
+	file_data = db.Column(db.LargeBinary)
 	posted_by = db.Column(db.String(255))
